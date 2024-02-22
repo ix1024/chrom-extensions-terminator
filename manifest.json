@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "链接二次确认终止器",
+  "version": "0.0.1",
+  "description": "去除恶心的zhihu，csdn，juejin待恶意网站打开链接两次确认",
+  "icons": {
+    "16": "icon128.png",
+    "32": "icon128.png",
+    "48": "icon128.png",
+    "64": "icon128.png",
+    "128": "icon128.png",
+    "256": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.zhihu.com/*", "*://*.csdn.net/*", "*://*.juejin.cn/*"],
+      "js": ["content.js"],
+      "css": ["content.css"]
+    }
+  ]
+}

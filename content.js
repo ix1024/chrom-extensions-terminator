@@ -34,47 +34,66 @@
   };
 })();
 console.clear();
+if (location.hostname === "blog.csdn.net") {
+  document
+    .querySelectorAll('a[rel="nofollow noopener noreferrer"]')
+    .forEach((item) => {
+      console.log(item);
+      item.addEventListener(
+        "click",
+        (ev) => {
+          console.log(ev.target);
+          ev.stopPropagation();
+          // ev.preventDefault();
+        },
+        false
+      );
+    });
+}
 
 // console.clear();
 // 查看页面中所有的元素
-Array.from(document.querySelectorAll("*")).forEach((item) => {
-  if (typeof window.getEventListeners === "function") {
-    const events = getEventListeners(item);
-    if (!events) {
-      return;
-    }
-    Object.keys(events)?.forEach((type) => {
-      console.log(type, events[type]);
-      events[type]?.forEach((event) => {
-        item.removeEventListener(type, event.listener);
-      });
-      item[type] = null;
-    });
-  }
-});
+// Array.from(document.querySelectorAll("*")).forEach((item) => {
+//   if (typeof window.getEventListeners === "function") {
+//     const events = getEventListeners(item);
+//     if (!events) {
+//       return;
+//     }
+//     Object.keys(events)?.forEach((type) => {
+//       console.log(type, events[type]);
+//       events[type]?.forEach((event) => {
+//         item.removeEventListener(type, event.listener);
+//       });
+//       item[type] = null;
+//     });
+//   }
+// });
 
 const cale = (ev) => {
   const { target } = ev;
   const { nodeName } = target;
-  var closestLink = event.target.closest("a");
+  var closestLink = target.closest("a");
   const href = closestLink?.href;
+  
   if (
     location.hostname === "blog.csdn.net" &&
     typeof href === "string" &&
     href.length
   ) {
-    console.log(target, nodeName, target?.onclick);
+    console.log(target, target?.onclick, href);
     // 移除target 绑定的事件
     // ev.preventDefault();
+
+    target?.removeAttribute("target");
     target?.removeAttribute("onclick");
+    target?.removeAttribute("click");
     target?.removeEventListener("click", target?.onclick);
     try {
     } catch (error) {}
+    window.open(href);
     ev.preventDefault();
     ev.stopPropagation();
-    window.open(href);
-
-    return;
+    return false;
   }
   // 处理知乎的外链
   if (
@@ -83,9 +102,6 @@ const cale = (ev) => {
       href?.includes("link.juejin") ||
       href?.includes("link.csdn.net"))
   ) {
-    ev.preventDefault();
-    ev.stopPropagation();
-
     // 使用正则表达式提取 target 参数值
     // 使用正则表达式提取目标值
     var pattern = /target=([^&]+)/;
@@ -95,6 +111,8 @@ const cale = (ev) => {
       var url = decodeURIComponent(targetValue);
       console.log(match, url);
       window.open(url);
+      ev.preventDefault();
+      ev.stopPropagation();
     }
   }
 };
